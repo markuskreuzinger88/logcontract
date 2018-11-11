@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Dial Code with Flag</title>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/toast.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/toast.css" />
+    <ons-fab type="submit" position="bottom right" onclick="nextSite()">
+        <ons-icon icon="md-arrow-forward"></ons-icon>
+    </ons-fab>
+    <ons-icon size="30px" style="margin-left: 10px; margin-top: 10px;" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+    <ons-toast modifier="danger thick">
+        Keine Verbindung zum LogContract Server
+    </ons-toast>
+</head>
+
+<style>
+    p {
+        font-family: Calibri;
+        font-size: 18px;
+    }
+
+</style>
+
+<body>
+    <div style="text-align: center; margin-top: 10px;">
+        <p>Bitte gib den 4-stelligen Code ein, den wir dir an die Nummer <b id="HandyNumber">0699123456</b> geschickt haben </p>
+        <div class="col-md-12 pd-10">
+            <div class="col-md-2">
+                <input id="CodeDigit0" placeholder="0" type="number" name="txtNumber" maxlength="1" style="width: 20px; outline: 0; background: transparent; border: 0; border-bottom: 2px solid black; text-align: center; font-size: 18px; margin-left: 10px; padding: 5px">
+                <input id="CodeDigit1" placeholder="0" type="number" name="txtNumber" maxlength="1" style="width: 20px; outline: 0; background: transparent; border: 0; border-bottom: 2px solid black; text-align: center; font-size: 18px; margin-left: 10px; padding: 5px">
+                <input id="CodeDigit2" placeholder="0" type="number" name="txtNumber" maxlength="1" style="width: 20px; outline: 0; background: transparent; border: 0; border-bottom: 2px solid black; text-align: center; font-size: 18px; margin-left: 10px; padding: 5px">
+                <input id="CodeDigit3" placeholder="0" type="number" name="txtNumber" maxlength="1" style="width: 20px; outline: 0; background: transparent; border: 0; border-bottom: 2px solid black; text-align: center; font-size: 18px; margin-left: 10px; padding: 5px">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <p id="debug"></p>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            document.getElementById("HandyNumber").innerHTML = localStorage.HandyNumber;
+        });
+
+        function BackButton() {
+            window.location = "notifying_page1.html ";
+        }
+
+        function nextSite() {
+            var CodeDigit0 = document.getElementById("CodeDigit0").value;
+            var CodeDigit1 = document.getElementById("CodeDigit1").value;
+            var CodeDigit2 = document.getElementById("CodeDigit2").value;
+            var CodeDigit3 = document.getElementById("CodeDigit3").value;
+            //            document.getElementById("debug").innerHTML = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3;
+            //            window.location = "notifying_page3.html";
+            $.ajax({
+                url: "https://logcontract.com/api/user/token/check",
+                type: "POST",
+                data: {
+                    "uuid": device.uuid,
+                    "token": CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
+                },
+                success: function(data) {
+                    if (data.success == true) {
+                        alert("success")
+                        window.location = "notifying_page3.html";
+                    } else {
+                        alert("please enter correct Code")
+                    }
+                }
+            });
+        }
+
+        function BackButton() {
+            window.location = "notifying_page1.html ";
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>LeerGutVerwaltung</title>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" src="js/toast.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/toast.css" />
+    <ons-page>
+        <ons-toolbar>
+            <div class="center" style="color: deepskyblue; vertical-align: middle; text-align: center">LeerGutVerwaltung</div>
+        </ons-toolbar>
+        <ons-card>
+            <!--            <ons-button modifier="quiet" onclick="backSite()" style="margin-left: 20px; margin-top: 10px">-->
+            <ons-button modifier="quiet" onclick="backSite()">
+                <ons-icon style="color: black;" size="20px" icon="md-arrow-left"></ons-icon>
+            </ons-button>
+            <p>Bitte gib deine Daten für die Anmeldung ein</p>
+            <div style="text-align: center; margin-top: 10px;">
+                <p>
+                    <ons-input onchange="myFunction1()" id="TextField1" modifier="underbar" type="text" placeholder="Vorname" float></ons-input>
+                </p>
+                <p>
+                    <ons-input onchange="myFunction2()" id="TextField2" modifier="underbar" type="text" placeholder="Nachname" float></ons-input>
+                </p>
+                <p>
+                    <ons-input onchange="myFunction2()" id="TextField2" modifier="underbar" type="text" placeholder="Spedtition" float></ons-input>
+                </p>
+                <p>
+                    <ons-input onchange="myFunction2()" id="TextField2" modifier="underbar" type="text" placeholder="Kennzeichen" float></ons-input>
+                </p>
+                <p>
+                    <ons-input onchange="myFunction2()" id="TextField2" modifier="underbar" type="text" placeholder="Handynummer" float></ons-input>
+                </p>
+                <p>
+                    <ons-input onchange="myFunction2()" id="TextField2" modifier="underbar" type="text" placeholder="E-Mail" float></ons-input>
+                </p>
+                <ons-fab position="left" onclick="newSite()">
+                    <ons-icon icon="md-arrow-forward"></ons-icon>
+                </ons-fab>
+            </div>
+        </ons-card>
+    </ons-page>
+    <ons-toast modifier="danger thick" style="margin-bottom: 50px;">
+        Keine Verbindung zum LogContract Server
+    </ons-toast>
+</head>
+
+<body>
+    <script type="text/javascript ">
+        function backSite() {
+            window.location = "notifying_page1.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

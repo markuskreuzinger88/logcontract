@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <ons-icon size="30px" style="margin-left: 10px; margin-top: 10px;" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+    <style type="text/css" rel="stylesheet">
+        #qrcode {
+            width: 300px;
+            height: 300px;
+            margin-top: 15px;
+        }
+    </style>
+    <title>Hello World</title>
+</head>
+
+<body>
+    <div id="qrcode"></div>
+    <script type="text/javascript">
+        // function readDB() { // text = ""; // db = window.openDatabase("Database", "1.0", "LogiL DB", 200000); // db.transaction(function(tx) { // tx.executeSql('SELECT * FROM LOGS', [], function(tx, results) { // TBCode = "Typ1 =" + results.rows.item(0).log + " Typ2 =" + results.rows.item(1).log + " Typ3 =" + results.rows.item(2).log; // var qrcode = new QRCode("qrcode"); // qrcode.makeCode(TBCode); // }, null); // }); // }
+
+        function readDB() {
+            //            text = "";
+            //            db = window.openDatabase("Database", "1.0", "LogiL DB", 200000);
+            //            db.transaction(function(tx) {
+            //                tx.executeSql('SELECT * FROM LOGS', [], function(tx, results) {
+            TBCode = "hallo";
+            var qrcode = new QRCode("qrcode");
+            qrcode.makeCode(TBCode);
+            //                }, null);
+            //            });
+        }
+        //read out DB after 100 ms
+        setTimeout(readDB, 100);
+
+        function BackButton() {
+            window.location = "create_qr.html ";
+        }
+
+    </script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/qrcode.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+</body>
+
+</html>

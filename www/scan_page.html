@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>QR Scanner</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        function scan() {
+            cordova.plugins.barcodeScanner.scan(
+                function(result) {
+                    if (!result.cancelled) {
+                        if (result.format == "QR_CODE") {
+                            localStorage.ScanQRData = result.text;
+                            nextSite();
+                        }
+                    }
+                },
+                function(error) {
+                    alert("Scanning failed: " + error);
+                });
+        }
+
+        //start scanner after timeout
+        setTimeout(scan, 1000);
+
+        function nextSite() {
+            window.location = "scan_qr.html";
+        }
+
+    </script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+</body>
+
+</html>
