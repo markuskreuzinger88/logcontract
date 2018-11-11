@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Getting Receiver</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/toast.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/toast.css" />
+    <script type="text/javascript" src="cordova.js"></script>
+    <style>
+        p {
+            font-family: Calibri;
+            font-size: 18px;
+        }
+
+    </style>
+    <ons-toast modifier="danger thick">
+        Keine Verbindung zum LogContract Netzwerk
+    </ons-toast>
+</head>
+
+<body>
+
+    <div style="text-align: center; margin-top: 50px;">
+        <p>Bitte wähle den Empfänger aus</p>
+        <input sytle="margin-top: 10px;" style="border: 0" readonly="readonly">
+        <button type="button" onclick=ChooseCompany1() id=1 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany2() id=2 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany3() id=3 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany4() id=4 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany5() id=5 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany6() id=6 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany7() id=7 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany8() id=8 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany9() id=9 style="width: 80%; display: none"></button>
+        <button type="button" onclick=ChooseCompany10() id=10 style="width: 80%; display: none"></button>
+    </div>
+
+    <ons-modal direction="up">
+        <div style="text-align: center">
+            <p>
+                <ons-icon icon="md-spinner" size="28px" spin></ons-icon> Loading...
+            </p>
+        </div>
+    </ons-modal>
+    <script type="text/javascript">
+        var NbrCompanies = 5;
+        var chosenCompany = "";
+        var StringStored = "";
+        var modal = document.querySelector('ons-modal');
+        var db = window.openDatabase("Database", "1.0", "LogC DB", 200000);
+
+        $(document).ready(function() {
+            modal.show();
+        });
+
+        function GetServerInformation() {
+            var networkState = navigator.connection.type;
+            if (networkState !== Connection.NONE) {
+                //get company
+                $.get('https://logcontract.com/api/user/1234/data', function(data) {
+                    modal.hide();
+                    var jsonString = JSON.stringify(data);
+                    var DataObject = JSON.parse(jsonString);
+                    for (i = 1; i <= NbrCompanies; i++) {
+                        //                    document.getElementById(i).value = DataObject.data.favouredCompanies[i].name;
+                        document.getElementById(i).innerHTML = DataObject.data.favouredCompanies[i].name;
+                        StringStored += "+" + DataObject.data.favouredCompanies[i].name;
+                        //                    document.getElementById(i).style = "border: 2px solid black; border-radius: 50px; width: 80%; margin-top: 20px; font-family: Calibri; font-size: 18px; text-align: center;";
+                        document.getElementById(i).style = "border: 2px solid black; border-radius: 50px; width: 80%; margin-top: 20px; font-family: Calibri; font-size: 18px; text-align: center; background-color: white";
+                    }
+                });
+            } else {
+                //if there is not internet Connection read out Receiver from DB
+                GetDBInformation();
+            }
+        }
+
+        function GetDBInformation() {
+            db.transaction(function(tx) {
+                tx.executeSql('SELECT * FROM LOGS', [], function(tx, results) {
+                    modal.hide();
+                    var ReceiverStored = results.rows.item(9).log; //get stored Receiver
+                    var fields = ReceiverStored.split('+');
+                    for (i = 1; i <= (ReceiverStored.split('+').length - 1); i++) {
+                        document.getElementById(i).innerHTML = fields[i];
+                        document.getElementById(i).style = "border: 2px solid black; border-radius: 50px; width: 80%; margin-top: 20px; font-family: Calibri; font-size: 18px; text-align: center; background-color: white";
+                    }
+                }, null);
+            });
+        }
+
+        setTimeout(GetServerInformation, 500);
+
+        function ChooseCompany1() {
+            chosenCompany = document.getElementById(1).innerHTML;
+            localStorage.Company = 1;
+            writeReceiver2DB();
+        }
+
+        function ChooseCompany2() {
+            chosenCompany = document.getElementById(2).innerHTML;
+            localStorage.Company = 2;
+            writeReceiver2DB();
+        }
+
+        function ChooseCompany3() {
+            chosenCompany = document.getElementById(3).innerHTML;
+            localStorage.Company = 3;
+            writeReceiver2DB();
+        }
+
+        function ChooseCompany4() {
+            chosenCompany = document.getElementById(4).innerHTML;
+            localStorage.Company = 4;
+            writeReceiver2DB();
+        }
+
+        function ChooseCompany5() {
+            chosenCompany = document.getElementById(5).innerHTML;
+            localStorage.Company = 5;
+            writeReceiver2DB();
+        }
+
+        function write2DB() {
+            db.transaction(function(tx) {
+                tx.executeSql("UPDATE LOGS SET log=? where id=?;", [chosenCompany, 6]);
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {
+                window.location = "favoured_delivery_points.html ";
+            });
+        }
+
+        function writeReceiver2DB() {
+            if (StringStored != "") {
+                db.transaction(function(tx) {
+                    tx.executeSql("UPDATE LOGS SET log=? where id=?;", [StringStored, 10]);
+                }, function(error) {
+                    alert('Error: ' + error.message + ' code: ' + error.code);
+                }, function() {
+                    write2DB();
+                });
+            } else {
+                write2DB();
+            }
+        }
+
+    </script>
+</body>
+
+</html>

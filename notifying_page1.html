@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Dial Code with Flag</title>
+    <link rel="stylesheet" href="intl-tel-input-14.0.0/build/css/intlTelInput.css">
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/toast.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/toast.css" />
+    <ons-fab type="submit" position="bottom right" onclick="nextSite()">
+        <ons-icon icon="md-arrow-forward"></ons-icon>
+    </ons-fab>
+    <ons-icon size="30px" style="margin-left: 10px; margin-top: 10px;" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+    <ons-toast modifier="danger thick">
+        Keine Verbindung zum LogContract Server
+    </ons-toast>
+</head>
+
+<style>
+    input[type=tel],
+    select {
+        width: 100%;
+        padding: 12px 20px;
+        list-style-type: none;
+        text-align: left;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        border-bottom: 2px solid black;
+        font-size: 18px;
+    }
+
+    p {
+        font-family: Calibri;
+        font-size: 18px;
+    }
+
+</style>
+
+<body>
+    <div style="text-align: center; margin-top: 5px;">
+        <p>
+            <p>Bitte gib deine Handynummer ein</p>
+            <input id="phone" type="tel" placeholder="0664123456" size="10">
+        </p>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="intl-tel-input-14.0.0/build/js/intlTelInput.js "></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script>
+        var input = document.querySelector("#phone");
+
+        // initialise plugin
+        var iti = window.intlTelInput(input, {
+            initialCountry: "at",
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "";
+                    callback(countryCode);
+                });
+            },
+            utilsScript: "intl-tel-input-14.0.0/build/js/utils.js?1537727621611"
+        });
+
+        function nextSite() {
+            db = window.openDatabase("Database", "1.0", "LogC DB", 200000);
+            if (iti.isValidNumber()) {
+                HandyNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+                localStorage.HandyNumber = HandyNumber;
+                //check if selected country is Austria
+                if (HandyNumber.slice(0, 3) == 43) {
+                    db.transaction(function(tx) {
+                        tx.executeSql("UPDATE LOGS SET log=? where id=?;", [HandyNumber, 1]);
+                    }, function(error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    }, function() {
+                        alert("success")
+                    });
+                    $.ajax({
+                        url: "https://logcontract.com/api/user/signup",
+                        type: "POST",
+                        data: {
+                            "uuid": device.uuid,
+                            "handynumber": HandyNumber
+                        },
+                        success: function() {
+                            window.location = "notifying_page2.html";
+                        },
+                        error: function(xhr, textStatus, error) {
+                            alert(xhr.statusText);
+                            alert(textStatus);
+                            alert(error);
+                        }
+                    });
+                } else {
+                    ons.notification.alert({
+                        message: 'Only Country Austria is currently valid',
+                        title: 'Bad Selected Country',
+                    });
+                }
+            } else {
+                ons.notification.alert({
+                    message: 'Please enter correct phonenumber',
+                    title: 'Bad Phonenumber',
+                });
+            }
+        }
+
+        function BackButton() {
+            //            $(phone).trigger("focus");
+            window.location = "notifying_page0.html ";
+        }
+
+    </script>
+
+</body>
+
+</html>
